@@ -4,8 +4,6 @@ import ContactList from 'components/ContactList/ContactList';
 import Filter from 'components/Filter/Filter';
 import ContactForm from 'components/ContactForm/ContactForm';
 
-
-
 export class App extends Component {
   state = {
     contacts: [
@@ -17,25 +15,23 @@ export class App extends Component {
     filter: '',
   };
 
-  componentDidMount() {
-    const phoneContacts = localStorage.getItem('contacts');
-    const parsedContacts = JSON.parse(phoneContacts);
-    
-    if (parsedContacts) {
-      this.setState({ contacts: parsedContacts });
-    }
-  }
+  // componentDidMount() {
+  //   const phoneContacts = localStorage.getItem('contacts');
+  //   const parsedContacts = JSON.parse(phoneContacts);
 
-  componentDidUpdate(prevProps, prevState) {
-    const { contacts } = this.state;
+  //   if (parsedContacts) {
+  //     this.setState({ contacts: parsedContacts });
+  //   }
+  // }
 
-    if (prevState.contacts !== contacts) {
-      console.log('update information');
-      localStorage.setItem('contacts', JSON.stringify(contacts));
-    }
-  }
+  // componentDidUpdate(prevProps, prevState) {
+  //   const { contacts } = this.state;
 
-  
+  //   if (prevState.contacts !== contacts) {
+  //     console.log('update information');
+  //     localStorage.setItem('contacts', JSON.stringify(contacts));
+  //   }
+  // }
 
   formSubmitHandler = data => {
     const { name, number } = data;
@@ -54,6 +50,16 @@ export class App extends Component {
     this.setState(prevState => ({
       contacts: prevState.contacts.filter(contact => contact.id !== id),
     }));
+  };
+
+  getFilteredContacts = () => {
+    const filterContactsList = this.state.contacts.filter(contact => {
+      return contact.name
+        .toLowerCase()
+        .includes(this.state.filter.toLowerCase());
+    });
+
+    return filterContactsList;
   };
 
   render() {
