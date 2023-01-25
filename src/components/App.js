@@ -34,12 +34,18 @@ export class App extends Component {
   // }
 
   formSubmitHandler = data => {
-    const { name, number } = data;
-    const { contacts } = this.state;
-    contacts.some(contact => contact.name === name)
-      ? alert(`${name} is already in contacts`)
-      : contacts.push({ id: nanoid(), name: name, number: number });
-    this.setState({ contacts: contacts });
+    const id = nanoid();
+    const name = data.name;
+    const number = data.number;
+    const contactsLists = [...this.state.contacts];
+
+    if (contactsLists.findIndex(contact => name === contact.name) !== -1) {
+      alert(`${name} is already in contacts.`);
+    } else {
+      contactsLists.push({ name, id, number });
+    }
+
+    this.setState({ contacts: contactsLists });
   };
 
   handleChange = evt => {
