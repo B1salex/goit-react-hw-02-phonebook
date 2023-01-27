@@ -15,37 +15,23 @@ export class App extends Component {
     filter: '',
   };
 
-  // componentDidMount() {
-  //   const phoneContacts = localStorage.getItem('contacts');
-  //   const parsedContacts = JSON.parse(phoneContacts);
-
-  //   if (parsedContacts) {
-  //     this.setState({ contacts: parsedContacts });
-  //   }
-  // }
-
-  // componentDidUpdate(prevProps, prevState) {
-  //   const { contacts } = this.state;
-
-  //   if (prevState.contacts !== contacts) {
-  //     console.log('update information');
-  //     localStorage.setItem('contacts', JSON.stringify(contacts));
-  //   }
-  // }
-
-  formSubmitHandler = data => {
-    const id = nanoid();
-    const name = data.name;
-    const number = data.number;
-    const contactsLists = [...this.state.contacts];
-
-    if (contactsLists.findIndex(contact => name === contact.name) !== -1) {
-      alert(`${name} is already in contacts.`);
+  addContact = (name, number) => {
+    const { contacts } = this.state;
+    const newContact = {
+      id: nanoid(),
+      name,
+      number,
+    };
+    const isInclude = contacts.some(
+      contact => contact.name.toLowerCase() === name.toLowerCase()
+    );
+    if (isInclude) {
+      alert(`${name} is already in contact`);
     } else {
-      contactsLists.push({ name, id, number });
+      this.setState(prevState => ({
+        contacts: [newContact, ...prevState.contacts],
+      }));
     }
-
-    this.setState({ contacts: contactsLists });
   };
 
   handleChange = evt => {
@@ -70,7 +56,7 @@ export class App extends Component {
 
   render() {
     const { contacts, filter } = this.state;
-    const { handleChange, handleDelete, formSubmitHandler } = this;
+    const { handleChange, handleDelete } = this;
     const contactsFiltered = [];
     contacts.forEach(contact => {
       contact.name.toLowerCase().includes(filter.toLowerCase()) &&
@@ -80,7 +66,7 @@ export class App extends Component {
     return (
       <div>
         <h1>Phonebook</h1>
-        <ContactForm formSubmitHandler={formSubmitHandler} />
+        <ContactForm onSubmit={this.addContact} />
 
         <h2>Contacts</h2>
         <Filter filter={filter} handleChange={handleChange} />
